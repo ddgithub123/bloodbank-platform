@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipient Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background: #d9534f;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 60px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .sidebar a:hover {
+            background: #d9534f;
+        }
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">Recipient Dashboard</div>
+    
+    <div class="sidebar">
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+        <a href="#"><i class="fas fa-tint"></i> Blood Requests</a>
+        <a href="#"><i class="fas fa-hospital"></i> Hospitals</a>
+        <a href="#"><i class="fas fa-envelope"></i> Messages</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+    
+    <div class="content">
+        <h1>Welcome, {{ user.username }}</h1>
+        
+        <div class="card">
+            <h2>Blood Requests</h2>
+            <p>Check and manage your blood requests easily.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Available Donors</h2>
+            <p>Find nearby donors ready to help.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Donation History</h2>
+            <p>Track past blood donations and requests.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #d32f2f;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            position: fixed;
+            height: 100%;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            border-bottom: 1px solid #ddd;
+        }
+        .sidebar a:hover {
+            background: #d32f2f;
+            color: white;
+        }
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+        .card p {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">Welcome, {{ user.username }} - Organization Dashboard</div>
+    
+    <div class="sidebar">
+        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#"><i class="fas fa-warehouse"></i> Blood Inventory</a>
+        <a href="#"><i class="fas fa-user-plus"></i> Donor Management</a>
+        <a href="#"><i class="fas fa-bell"></i> Requests & Alerts</a>
+        <a href="#"><i class="fas fa-calendar-alt"></i> Schedule Camps</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    
+    <div class="content">
+        <div class="card">
+            <h2>Blood Inventory Status</h2>
+            <p>A+ : 12 units | B+ : 8 units | O- : 6 units | AB+ : 5 units</p>
+        </div>
+        <div class="card">
+            <h2>Active Donation Requests</h2>
+            <p>Urgent: 3 requests | Pending: 5 requests</p>
+        </div>
+        <div class="card">
+            <h2>Upcoming Donation Camps</h2>
+            <p>City Hospital - March 15 | Red Cross Center - March 20</p>
+        </div>
+    </div>
+</body>
+</html>
