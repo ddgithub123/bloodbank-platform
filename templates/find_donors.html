@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Donors</title>
+    <link rel="stylesheet" href="{% static 'css/find_donors.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Find Blood Donors</h2>
+        <form>
+            <label for="blood_type">Blood Type:</label>
+            <select id="blood_type" name="blood_type">
+                <option value="A+">A+</option>
+                <option value="O-">O-</option>
+            </select>
+            
+            <input type="text" placeholder="Enter city or hospital">
+            <button>Search</button>
+        </form>
+    </div>
+</body>
+</html>

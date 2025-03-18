@@ -1,0 +1,19 @@
+.container {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #d9534f;
+}
+
+p {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+}
