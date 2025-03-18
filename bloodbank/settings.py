@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bb.apps.BbConfig',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -76,10 +79,18 @@ WSGI_APPLICATION = 'bloodbank.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bloodbank',  # Replace with your database name
+        'USER': 'db',  # Replace with your MySQL username
+        'PASSWORD': '--------',  # Replace with your MySQL password
+        'HOST': 'localhost',  # Keep 'localhost' if MySQL is on the same machine
+        'PORT': '3306',  # Default MySQL port
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
 }
+
 
 
 # Password validation
@@ -126,3 +137,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'bb.User'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}

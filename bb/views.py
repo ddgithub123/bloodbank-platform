@@ -55,7 +55,7 @@ def admin(request):
 
 
 def donor(request):
-    return render(request,'donor_dashb.html')
+    return render(request,'donor_dash.html')
 
 
 def recipient(request):
