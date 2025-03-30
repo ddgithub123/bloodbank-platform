@@ -63,3 +63,4 @@ def recipient(request):
 
 def organization(request):
     return render(request,'organization_dash.html')
+
