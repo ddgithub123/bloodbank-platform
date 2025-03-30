@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <!-- Link External CSS -->
+    <link rel="stylesheet" href="{% static 'css/org_profile.css' %}">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">Welcome, Organization - Profile</div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
+        <a href="{% url 'blood_request' %}"><i class="fas fa-tint"></i> Blood Request</a>
+        <a href="{% url 'find_donors' %}"><i class="fas fa-search"></i> Find Donors</a>
+        <a href="{% url 'nearby_camps' %}"><i class="fas fa-map-marker-alt"></i> Nearby Camps</a>
+        <a href="{% url 'manage_inventory' %}"><i class="fas fa-warehouse"></i> Manage Inventory</a>
+        <a href="{% url 'reports' %}"><i class="fas fa-chart-line"></i> Report & Analytics</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="profile-card">
+            <h2>Organization Profile</h2>
+            <div class="profile-info">
+                <p><strong>Organization Name:</strong> {{ organization.name }}</p>
+                <p><strong>Address:</strong> {{ organization.address }}</p>
+                <p><strong>Contact:</strong> {{ organization.contact }}</p>
+                <p><strong>Email:</strong> {{ organization.email }}</p>
+                <p><strong>License Number:</strong> {{ organization.license_number }}</p>
+            </div>
+            <button class="edit-btn">Edit Profile</button>
+        </div>
+    </div>
+</body>
+</html>

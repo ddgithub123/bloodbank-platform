@@ -1,16 +1,93 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports & Analytics</title>
+
+    <!-- Link External CSS -->
     <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Reports & Analytics</h2>
-        <p>Coming soon: Data analytics on blood donations, requests, and inventory trends.</p>
+    <!-- Navbar -->
+    <div class="navbar">Reports & Analytics</div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
+        <a href="{% url 'blood_request' %}"><i class="fas fa-tint"></i> Blood Request</a>
+        <a href="{% url 'find_donors' %}"><i class="fas fa-search"></i> Find Donors</a>
+        <a href="{% url 'nearby_camps' %}"><i class="fas fa-map-marker-alt"></i> Nearby Camps</a>
+        <a href="{% url 'manage_inventory' %}"><i class="fas fa-warehouse"></i> Manage Inventory</a>
+        <a href="{% url 'reports' %}"><i class="fas fa-chart-line"></i> Report & Analytics</a>
     </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>Blood Donation Reports</h2>
+
+        <!-- Reports Table -->
+        <div class="table-container">
+            <h3>Donation Summary</h3>
+            <table id="reportTable">
+                <thead>
+                    <tr>
+                        <th>Blood Group</th>
+                        <th>Amount (Units)</th>
+                        <th>Age Group</th>
+                        <th>Camp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in donation_reports %}
+                    <tr>
+                        <td>{{ report.blood_group }}</td>
+                        <td>{{ report.amount }}</td>
+                        <td>{{ report.age_group }}</td>
+                        <td>{{ report.camp }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No donation data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Download Button -->
+        <button class="download-btn" onclick="downloadReport()">Download Report</button>
+    </div>
+
+    <!-- JavaScript for Downloading CSV -->
+    <script>
+        function downloadReport() {
+            let table = document.getElementById("reportTable");
+            let rows = table.rows;
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            for (let i = 0; i < rows.length; i++) {
+                let row = [];
+                let cols = rows[i].cells;
+                for (let j = 0; j < cols.length; j++) {
+                    row.push(cols[j].innerText);
+                }
+                csvContent += row.join(",") + "\\n";
+            }
+
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "blood_donation_report.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+    </script>
+
 </body>
 </html>

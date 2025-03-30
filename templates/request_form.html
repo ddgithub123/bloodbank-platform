@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Blood</title>
+
+    <!-- Link External CSS -->
+    <link rel="stylesheet" href="{% static 'css/request_form.css' %}">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
+        <a href="{% url 'blood_request' %}"><i class="fas fa-tint"></i> Blood Request</a>
+        <a href="{% url 'find_donors' %}"><i class="fas fa-search"></i> Find Donors</a>
+        <a href="{% url 'nearby_camps' %}"><i class="fas fa-map-marker-alt"></i> Nearby Camps</a>
+        <a href="{% url 'manage_inventory' %}"><i class="fas fa-warehouse"></i> Manage Inventory</a>
+        <a href="{% url 'reports' %}"><i class="fas fa-chart-line"></i> Report & Analytics</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>Request Blood</h2>
+        <form action="{% url 'submit_request' %}" method="POST">
+            {% csrf_token %}
+
+            <label for="blood-group">Blood Group:</label>
+            <select id="blood-group" name="blood_group" required>
+                <option value="">Select Blood Group</option>
+                {% for group in blood_groups %}
+                <option value="{{ group }}">{{ group }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="amount">Amount (Units):</label>
+            <input type="number" id="amount" name="amount" min="1" required>
+
+            <label for="reason">Reason for Request:</label>
+            <textarea id="reason" name="reason" rows="4" required></textarea>
+
+            <label for="camp">Preferred Blood Camp:</label>
+            <select id="camp" name="camp" required>
+                <option value="">Select Blood Camp</option>
+                {% for camp in blood_camps %}
+                <option value="{{ camp }}">{{ camp }}</option>
+                {% endfor %}
+            </select>
+
+            <h3>Contact Details</h3>
+
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <button type="submit">Submit Request</button>
+        </form>
+
+        <!-- View Requests Button (Aligned to Right) -->
+        <div class="button-container">
+            <a href="{% url 'blood_request' %}" class="view-requests-btn">View Requests</a>
+        </div>
+    </div>
+</body>
+</html>

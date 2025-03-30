@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Inventory</title>
+
+    <!-- Link External CSS -->
+    <link rel="stylesheet" href="{% static 'css/manage_inventory.css' %}">
+
+    <!-- Chart.js for Blood Level Bar Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">Manage Blood Inventory</div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
+        <a href="{% url 'blood_request' %}"><i class="fas fa-tint"></i> Blood Request</a>
+        <a href="{% url 'find_donors' %}"><i class="fas fa-search"></i> Find Donors</a>
+        <a href="{% url 'nearby_camps' %}"><i class="fas fa-map-marker-alt"></i> Nearby Camps</a>
+        <a href="{% url 'manage_inventory' %}"><i class="fas fa-warehouse"></i> Manage Inventory</a>
+        <a href="{% url 'reports' %}"><i class="fas fa-chart-line"></i> Report & Analytics</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>Amount of Blood Available</h2>
+
+        <!-- Blood Level Chart -->
+        <div class="chart-container">
+            <canvas id="bloodChart"></canvas>
+        </div>
+
+        <!-- Recent Donations/Confirmations Table -->
+        <div class="table-container">
+            <h3>Recent Donations / Confirmations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Donor Name</th>
+                        <th>Blood Group</th>
+                        <th>Location</th>
+                        <th>Request</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donor in donors %}
+                    <tr>
+                        <td>{{ donor.name }}</td>
+                        <td>{{ donor.blood_group }}</td>
+                        <td>{{ donor.location }}</td>
+                        <td><button class="request-btn" onclick="confirmRequest('{{ donor.name }}')">Confirm</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript for Blood Level Bar Chart -->
+    <script>
+        var ctx = document.getElementById('bloodChart').getContext('2d');
+        var bloodChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+                datasets: [{
+                    label: 'Blood Units Available',
+                    data: {{ blood_units|safe }}, // Passed from Django context
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                        '#9966FF', '#FF9F40', '#7DD181', '#F7464A'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Function to confirm request
+        function confirmRequest(donorName) {
+            alert("Confirmed donation from " + donorName);
+        }
+    </script>
+</body>
+</html>

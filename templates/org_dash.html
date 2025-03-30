@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    
+    <!-- Link External CSS -->
+    <link rel="stylesheet" href="{% static 'css/org_dashboard.css' %}">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="navbar">Welcome, Organization - Dashboard</div>
+    
+    <div class="sidebar">
+        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
+        <a href="{% url 'blood_request' %}"><i class="fas fa-tint"></i> Blood Request</a>
+        <a href="{% url 'find_donors' %}"><i class="fas fa-search"></i> Find Donors</a>
+        <a href="{% url 'nearby_camps' %}"><i class="fas fa-map-marker-alt"></i> Nearby Camps</a>
+        <a href="{% url 'manage_inventory' %}"><i class="fas fa-warehouse"></i> Manage Inventory</a>
+        <a href="{% url 'reports' %}"><i class="fas fa-chart-line"></i> Report & Analytics</a>
+    </div>
+    
+    <div class="content">
+        <div class="card">
+            <h2>Blood Inventory Status</h2>
+            <p>
+                A+ : {{ blood_inventory.A_plus }} units | 
+                B+ : {{ blood_inventory.B_plus }} units | 
+                O- : {{ blood_inventory.O_negative }} units | 
+                AB+ : {{ blood_inventory.AB_plus }} units
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Active Blood Requests</h2>
+            <p>Urgent: {{ urgent_requests }} requests | Pending: {{ pending_requests }} requests</p>
+        </div>
+
+        <div class="card">
+            <h2>Upcoming Donation Camps</h2>
+            <p>
+                {% for camp in upcoming_camps %}
+                    {{ camp.name }} - {{ camp.date }} <br

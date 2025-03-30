@@ -36,8 +36,17 @@ body {
 
 /* Main Content */
 .content {
-    margin-left: 250px;
+    margin-left: 220px;
     padding: 20px;
+}
+
+/* Map Styling */
+#map {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
 }
 
 /* Table Styling */
@@ -62,34 +71,17 @@ th, td {
 th {
     background-color: #f4f4f4;
 }
-.download-btn {
-    display: inline-block;
+
+/* Request Button */
+.request-btn {
     background-color: #d32f2f;
     color: white;
-    padding: 12px 20px;
-    text-decoration: none;
-    font-size: 18px;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
     border-radius: 5px;
-    font-weight: bold;
-    float: right;
 }
 
-.download-btn:hover {
+.request-btn:hover {
     background-color: #b71c1c;
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    .sidebar {
-        width: 100px;
-    }
-
-    .sidebar a {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    .content {
-        margin-left: 120px;
-    }
 }
