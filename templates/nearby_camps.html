@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Camps</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #c62828;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+        }
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #d32f2f;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .sidebar a:hover {
+            background: #b71c1c;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: #ffe5e5;
+        }
+        .logout {
+            text-align: right;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .map-container {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+    <script>
+        function initMap() {
+            var centerLocation = { lat: 40.7128, lng: -74.0060 }; // Default Center
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: centerLocation
+            });
+
+            fetch('/api/nearby-camps/')
+                .then(response => response.json())
+                .then(data => {
+                    data.camps.forEach(camp => {
+                        var marker = new google.maps.Marker({
+                            position: { lat: camp.lat, lng: camp.lng },
+                            map: map,
+                            title: camp.name
+                        });
+
+                        var infoWindow = new google.maps.InfoWindow({
+                            content: `<strong>${camp.name}</strong>`
+                        });
+
+                        marker.addListener("click", function() {
+                            infoWindow.open(map, marker);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching camp data:', error));
+        }
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        Welcome, {{ user.username }} | Nearby Camps
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <a href="#">🏠 Profile</a>
+            <a href="#">📅 My Donations</a>
+            <a href="#">🔔 Notifications</a>
+            <a href="#">📍 Nearby Camps</a>
+            <a href="#">📅 Book Appointment</a>
+            <a href="#">📞 Contact Support</a>
+        </div>
+        <div class="main-content">
+            <div class="logout">
+                <a href="#" style="color: black;">Logout</a>
+            </div>
+            <h2>Nearby Blood Donation Camps</h2>
+            <div class="map-container">
+                <div id="map" style="height: 100%; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Maps API (Replace YOUR_API_KEY with actual key) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+</body>
+</html>

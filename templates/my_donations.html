@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Donations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #c62828;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+        }
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #d32f2f;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .sidebar a:hover {
+            background: #b71c1c;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: #ffe5e5;
+        }
+        .logout {
+            text-align: right;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .table-container {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #c62828;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        Welcome, {{ user.username }} | My Donations
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <a href="#">🏠 Profile</a>
+            <a href="#">📅 My Donations</a>
+            <a href="#">🔔 Notifications</a>
+            <a href="#">📍 Nearby Camps</a>
+            <a href="#">📅 Book Appointment</a>
+            <a href="#">📞 Contact Support</a>
+        </div>
+        <div class="main-content">
+            <div class="logout">
+                <a href="#" style="color: black;">Logout</a>
+            </div>
+            <h2>Past Donations</h2>
+            <div class="table-container">
+                <h3>Last Donation</h3>
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>Camp</th>
+                        <th>Amount</th>
+                    </tr>
+                    {% for donation in donations %}
+                    <tr>
+                        <td>{{ donation.date }}</td>
+                        <td>{{ donation.camp }}</td>
+                        <td>{{ donation.amount }} ml</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
