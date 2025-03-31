@@ -1,100 +1,23 @@
-
-{% load static %}
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nearby Camps</title>
-<<<<<<< HEAD
-
-    <!-- Link External CSS -->
-    <link rel="stylesheet" href="{% static 'css/nearby_camps.css' %}">
-
-    <!-- Leaflet.js for Maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <!-- Navbar -->
-    <div class="navbar">Nearby Blood Donation Camps</div>
-    
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
-        <a href="{% url 'blood_request' %}"><i class="fas fa-tint"></i> Blood Request</a>
-        <a href="{% url 'find_donors' %}"><i class="fas fa-search"></i> Find Donors</a>
-        <a href="{% url 'nearby_camps' %}"><i class="fas fa-map-marker-alt"></i> Nearby Camps</a>
-        <a href="{% url 'manage_inventory' %}"><i class="fas fa-warehouse"></i> Manage Inventory</a>
-        <a href="{% url 'reports' %}"><i class="fas fa-chart-line"></i> Report & Analytics</a>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content">
-        <h2>Nearby Blood Donation Camps</h2>
-
-        <!-- Map Container -->
-        <div id="map"></div>
-
-        <!-- Camps Table -->
-        <div class="table-container">
-            <h3>Upcoming Camps</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Camp Name</th>
-                        <th>Location</th>
-                        <th>Date</th>
-                        <th>Register</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for camp in camps %}
-                    <tr>
-                        <td>{{ camp.name }}</td>
-                        <td>{{ camp.city }}</td>
-                        <td>{{ camp.date }}</td>
-                        <td><button class="register-btn" onclick="registerCamp('{{ camp.name }}')">Register</button></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- JavaScript for Map -->
+{% extends 'donor_dash.html' %}
+{% block title %}Nearby Camps{% endblock %}
+{% block content %}
+    <h2>Nearby Blood Donation Camps</h2>
+    <div id="map" style="height: 400px;"></div>
     <script>
-        var map = L.map('map').setView([20.5937, 78.9629], 5); // Centered in India
-
-        // Add OpenStreetMap tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Blood Camp Locations (Passed from Django Context)
-        var camps = [
-            {% for camp in camps %}
-            { name: "{{ camp.name }}", coords: [{{ camp.coords.0 }}, {{ camp.coords.1 }}], city: "{{ camp.city }}", date: "{{ camp.date }}" },
-            {% endfor %}
-        ];
-
-        // Add markers to the map
-        camps.forEach(camp => {
-            L.marker(camp.coords)
-                .addTo(map)
-                .bindPopup(`<b>${camp.name}</b><br>Location: ${camp.city}<br>Date: ${camp.date}`);
-        });
-
-        // Function to register for a camp
-        function registerCamp(campName) {
-            alert("Registered for " + campName);
+        function initMap() {
+            var locations = {{ camp_locations|safe }};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: {lat: locations[0].lat, lng: locations[0].lng}
+            });
+            locations.forEach(function(camp) {
+                new google.maps.Marker({
+                    position: {lat: camp.lat, lng: camp.lng},
+                    map: map,
+                    title: camp.name
+                });
+            });
         }
     </script>
-
-</body>
-</html>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&callback=initMap"></script>
+{% endblock %}

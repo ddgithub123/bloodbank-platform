@@ -1,185 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Scheduling</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .navbar {
-            background-color: #c62828;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 20px;
-        }
-        .sidebar {
-            width: 200px;
-            height: 100vh;
-            background: #d32f2f;
-            color: white;
-            position: fixed;
-            padding: 20px;
-        }
-        .sidebar a {
-            display: block;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            margin-top: 10px;
-        }
-        .sidebar a:hover {
-            background: #b71c1c;
-        }
-        .content {
-            margin-left: 220px;
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background: #c62828;
-            color: white;
-        }
-        .book-btn {
-            background: #d32f2f;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .book-btn:hover {
-            background: #b71c1c;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            border-radius: 8px;
-            text-align: center;
-        }
-        .popup button {
-            margin-top: 10px;
-            background: #c62828;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .popup button:hover {
-            background: #b71c1c;
-        }
-    </style>
+{% extends 'donor_dash.html' %}
+{% block title %}Book Appointment{% endblock %}
+{% block content %}
+    <h2>Schedule an Appointment</h2>
+    <table border="1">
+        <tr>
+            <th>Camp</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+        {% for camp in camps %}
+        <tr>
+            <td>{{ camp.name }}</td>
+            <td>{{ camp.date }}</td>
+            <td>{{ camp.time }}</td>
+            <td><button onclick="confirmBooking('{{ camp.id }}')">Book</button></td>
+        </tr>
+        {% endfor %}
+    </table>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('/api/appointments/')
-                .then(response => response.json())
-                .then(data => {
-                    let tableBody = document.getElementById("appointmentTableBody");
-                    data.appointments.forEach(appointment => {
-                        let row = `<tr>
-                            <td>${appointment.camp_name}</td>
-                            <td>${appointment.date}</td>
-                            <td>${appointment.time}</td>
-                            <td><button class="book-btn" onclick="showPopup('${appointment.camp_name}', '${appointment.date}', '${appointment.time}')">Book</button></td>
-                        </tr>`;
-                        tableBody.innerHTML += row;
-                    });
-                });
-        });
-
-        function showPopup(camp, date, time) {
-            document.getElementById("popupCamp").innerText = camp;
-            document.getElementById("popupDate").innerText = date;
-            document.getElementById("popupTime").innerText = time;
-            document.getElementById("confirmationPopup").style.display = "block";
-        }
-
-        function closePopup() {
-            document.getElementById("confirmationPopup").style.display = "none";
-        }
-
-        function confirmBooking() {
-            let donorName = prompt("Enter your name:");
-            let camp = document.getElementById("popupCamp").innerText;
-            let date = document.getElementById("popupDate").innerText;
-            let time = document.getElementById("popupTime").innerText;
-
-            fetch('/api/book-appointment/', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ donor_name: donorName, camp_name: camp, date: date, time: time })
-            }).then(response => response.json())
-              .then(data => {
-                  alert(data.message);
-                  closePopup();
-                  location.reload();
-              });
+        function confirmBooking(campId) {
+            if (confirm("Are you sure you want to book this appointment?")) {
+                window.location.href = "/book-appointment/" + campId;
+            }
         }
     </script>
-</head>
-<body>
-    <div class="navbar">
-        Welcome, {{ user.username }} | Appointment Scheduling
-    </div>
-    <div class="sidebar">
-        <a href="#">🏠 Profile</a>
-        <a href="#">📅 My Donations</a>
-        <a href="#">🔔 Notifications</a>
-        <a href="#">📍 Nearby Camps</a>
-        <a href="#">📅 Book Appointment</a>
-        <a href="#">📞 Contact Support</a>
-    </div>
-    <div class="content">
-        <h2>Schedule an Appointment</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Camp</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="appointmentTableBody">
-                <!-- Data will be loaded here -->
-            </tbody>
-        </table>
-    </div>
-
-    <div class="popup" id="confirmationPopup">
-        <h3>Confirm Appointment</h3>
-        <p><strong>Camp:</strong> <span id="popupCamp"></span></p>
-        <p><strong>Date:</strong> <span id="popupDate"></span></p>
-        <p><strong>Time:</strong> <span id="popupTime"></span></p>
-        <button onclick="confirmBooking()">Confirm</button>
-        <button onclick="closePopup()">Cancel</button>
-    </div>
-</body>
-</html>
+{% endblock %}
