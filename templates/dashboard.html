@@ -1,0 +1,15 @@
+{% extends 'donor_dash.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <h2>Dashboard Overview</h2>
+    <div class="card">
+        <h3>Last Donation</h3>
+        <p>Date: {{ last_donation_date }}</p>
+        <p>Location: {{ last_donation_location }}</p>
+    </div>
+    <div class="card">
+        <h3>Upcoming Events & Requests</h3>
+        <p>Urgent Need for {{ required_blood_group }} in {{ urgent_location }}</p>
+        <p>Next Donation Camp: {{ camp_date }} at {{ camp_location }}</p>
+    </div>
+{% endblock %}
