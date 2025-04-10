@@ -1,0 +1,23 @@
+{% extends 'donor_dash.html' %}
+{% block title %}Nearby Camps{% endblock %}
+{% block content %}
+    <h2>Nearby Blood Donation Camps</h2>
+    <div id="map" style="height: 400px;"></div>
+    <script>
+        function initMap() {
+            var locations = {{ camp_locations|safe }};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: {lat: locations[0].lat, lng: locations[0].lng}
+            });
+            locations.forEach(function(camp) {
+                new google.maps.Marker({
+                    position: {lat: camp.lat, lng: camp.lng},
+                    map: map,
+                    title: camp.name
+                });
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&callback=initMap"></script>
+{% endblock %}

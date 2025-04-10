@@ -10,24 +10,24 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <form method="POST" action="{% url 'login' %}">
+        <form method="POST" action="{% url 'login_view' %}">
             {% csrf_token %}
             <label for="role">Select Role:</label>
             <select id="role" name="role">
                 <option value="donor">Donor</option>
-                <option value="recipient">Recipient</option>
                 <option value="organization">Organization</option>
                 <option value="admin">Admin</option>
             </select>
-
+        
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-
+        
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
-
+        
             <button type="submit">Login</button>
         </form>
+        
     </div>
 </body>
 </html>

@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'bloodbank.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bloodbank',  # Replace with your database name
+        'NAME': 'bloodbank2',  # Replace with your database name
         'USER': 'db',  # Replace with your MySQL username
-        'PASSWORD': '--------',  # Replace with your MySQL password
+        'PASSWORD': 'dishadarsh',  # Replace with your MySQL password
         'HOST': 'localhost',  # Keep 'localhost' if MySQL is on the same machine
         'PORT': '3306',  # Default MySQL port
         'OPTIONS': {

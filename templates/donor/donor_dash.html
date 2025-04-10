@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donor Dashboard</title>
+    <title>{% block title %}Donor Dashboard{% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,6 +63,7 @@
         <a href="{% url 'contact_support' %}">📞 Contact Support</a>
     </div>
     <div class="content">
+        {% block content %}
         <h2>Dashboard Overview</h2>
         <div class="card">
             <h3>Last Donation</h3>
@@ -74,6 +75,7 @@
             <p>Urgent Need for {{ required_blood_group }} in {{ urgent_location }}</p>
             <p>Next Donation Camp: {{ camp_date }} at {{ camp_location }}</p>
         </div>
+        {% endblock %}
     </div>
 </body>
 </html>

@@ -1,0 +1,23 @@
+{% extends 'donor_dash.html' %}
+
+{% block title %}My Donations{% endblock %}
+
+{% block content %}
+    <h2>My Donation History</h2>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Amount Donated</th>
+        </tr>
+        {% for donation in donations %}
+        <tr>
+            <td>{{ donation.donation_date }}</td>
+            <td>{{ donation.organization.address }}</td>
+            <td>{{ donation.amount }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No donations found.</td></tr>
+        {% endfor %}
+    </table>
+{% endblock %}

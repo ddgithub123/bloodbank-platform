@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Profile</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .profile-container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #c62828;
+        }
+        .field {
+            margin: 10px 0;
+        }
+        .field strong {
+            width: 150px;
+            display: inline-block;
+        }
+        .form-section {
+            margin-top: 20px;
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        button {
+            padding: 10px 15px;
+            margin-top: 15px;
+            background-color: #c62828;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .verified {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'donor' %}" style="text-decoration: none; color: #c62828; font-weight: bold;">
+        ← Back to Dashboard
+    </a>
+<div class="profile-container">
+    <h2>My Profile</h2>
+
+    {% if msg %}
+        <div class="status verified">{{ msg }}</div>
+    {% endif %}
+
+    <!-- Profile Summary -->
+    <div class="field"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</div>
+
+    <div class="field"><strong>Email:</strong> {{ user.email }}</div>
+    <div class="field"><strong>Phone:</strong> {{ user.phone|default:"Not provided" }}</div>
+
+    <div class="field"><strong>Role:</strong> {{ user.role }}</div>
+    <div class="field"><strong>Blood Group:</strong> {{ donor.blood_group|default:"Not filled" }}</div>
+    <div class="field"><strong>Disease History:</strong> {{ donor.disease_history|default:"Not filled" }}</div>
+    <div class="field"><strong>Last Donation Date:</strong> {{ donor.last_donation_date|default:"Not specified" }}</div>
+
+    {% if not verified %}
+        <div class="status pending">⏳ Status: Not Verified</div>
+    {% else %}
+        <div class="status verified">✅ Status: Verified</div>
+    {% endif %}
+
+    <button onclick="toggleForm()">✏️ Edit Profile</button>
+
+    <!-- Edit Form Section -->
+    <div class="form-section" id="formSection">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">💾 Save</button>
+        </form>
+    </div>
+
+    {% if not verified and can_apply %}
+        <form method="post" style="margin-top: 10px;">
+            {% csrf_token %}
+            <button type="submit" name="apply_verification" class="btn btn-warning">
+                🛡️ Apply for Verification
+            </button>
+        </form>
+    {% elif not verified %}
+        <p class="status pending">Verification request already sent. Please wait.</p>
+    {% endif %}
+</div>
+
+<script>
+    function toggleForm() {
+        const section = document.getElementById('formSection');
+        section.classList.toggle('active');
+    }
+</script>
+</body>
+</html>

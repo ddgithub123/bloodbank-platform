@@ -1,0 +1,28 @@
+{% extends 'donor_dash.html' %}
+{% block title %}Book Appointment{% endblock %}
+{% block content %}
+    <h2>Schedule an Appointment</h2>
+    <table border="1">
+        <tr>
+            <th>Camp</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+        {% for camp in camps %}
+        <tr>
+            <td>{{ camp.name }}</td>
+            <td>{{ camp.date }}</td>
+            <td>{{ camp.time }}</td>
+            <td><button onclick="confirmBooking('{{ camp.id }}')">Book</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        function confirmBooking(campId) {
+            if (confirm("Are you sure you want to book this appointment?")) {
+                window.location.href = "/book-appointment/" + campId;
+            }
+        }
+    </script>
+{% endblock %}
