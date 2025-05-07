@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donor Profile | Renova</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center z-50">
+    <a href="{{url_for('index')}}" class="text-3xl font-bold text-red-600">Renova</a>
+    <div class="hidden md:flex gap-8 text-lg">
+      <a href="{{url_for('index')}}" class="hover:text-red-500">Home</a>
+      <a href="{{url_for('about')}}" class="hover:text-red-500">About</a>
+      <a href="{{url_for('contact')}}" class="hover:text-red-500">Contact</a>
+    
+      <div class="relative group">
+        <img src="{{ src }}" alt="Profile" class="rounded-full w-10 h-10 border border-gray-300 cursor-pointer">
+        <div class="absolute hidden group-hover:block right-0 mt-2 w-40 bg-white rounded-md shadow-md py-2">
+          <a href="{{url_for('appointment')}}" class="block px-4 py-2 hover:bg-gray-100">Appointment</a>
+          <a href="{{url_for('logout')}}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-28 px-6 max-w-5xl mx-auto space-y-16">
+    <!-- Profile Info -->
+    <section class="bg-white shadow-md rounded-xl p-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 class="text-3xl font-bold text-red-600 mb-2">Hello, {{ data.first_name }}!</h1>
+          <p class="text-lg text-gray-600">Donor ID: <strong>{{ data.donor_id }}</strong></p>
+          <p class="text-lg text-gray-600">Blood Type: <strong>{{ data.blood_type }}</strong></p>
+        </div>
+        <div class="relative">
+          <img src="{{ src }}" alt="Profile" class="rounded-full w-32 h-32 border-4 border-red-500 object-cover">
+          <label for="input-file" class="absolute bottom-1 right-1 bg-white text-red-600 p-2 rounded-full shadow cursor-pointer">
+            <i class="fa-solid fa-pencil"></i>
+          </label>
+          <input type="file" name="image" accept="image/*" id="input-file" class="hidden" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal Information Form -->
+    <section class="bg-white shadow-md rounded-xl p-8">
+      <h2 class="text-2xl font-semibold text-red-600 mb-4">Update Profile</h2>
+      <form action="/profile" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <input type="hidden" name="ID" value="{{ data.donor_id }}">
+        <input type="hidden" name="email" value="{{ email.d_email_id }}">
+
+        <div>
+          <label class="font-medium">First Name</label>
+          <input type="text" name="Fname" value="{{ data.first_name }}" class="w-full mt-1 p-3 border rounded">
+        </div>
+        <div>
+          <label class="font-medium">Middle Name</label>
+          <input type="text" name="Mname" value="{{ data.middle_name }}" class="w-full mt-1 p-3 border rounded">
+        </div>
+        <div>
+          <label class="font-medium">Last Name</label>
+          <input type="text" name="Lname" value="{{ data.last_name }}" class="w-full mt-1 p-3 border rounded">
+        </div>
+        <div>
+          <label class="font-medium">Date of Birth</label>
+          <input type="date" name="DOB" value="{{ data.date_of_birth }}" class="w-full mt-1 p-3 border rounded">
+        </div>
+        <div>
+          <label class="font-medium">Gender</label>
+          <select name="gender" class="w-full mt-1 p-3 border rounded">
+            <option value="Male" {% if data.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if data.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if data.gender == 'Other' %}selected{% endif %}>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-medium">Mobile No.</label>
+          <input type="text" name="mob" value="{{ data.contact_phone }}" class="w-full mt-1 p-3 border rounded">
+        </div>
+        <div class="md:col-span-2">
+          <label class="font-medium">Address</label>
+          <textarea name="address" rows="2" class="w-full mt-1 p-3 border rounded">{{ data.contact_address }}</textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="font-medium">City</label>
+          <input type="text" name="city" value="{{ data.city }}" class="w-full mt-1 p-3 border rounded">
+        </div>
+        <div>
+          <label class="font-medium">Blood Type</label>
+          <select name="Btype" class="w-full mt-1 p-3 border rounded">
+            <option value="A+" {% if data.blood_type == 'A+' %}selected{% endif %}>A+</option>
+            <option value="A-" {% if data.blood_type == 'A-' %}selected{% endif %}>A-</option>
+            <option value="B+" {% if data.blood_type == 'B+' %}selected{% endif %}>B+</option>
+            <option value="B-" {% if data.blood_type == 'B-' %}selected{% endif %}>B-</option>
+            <option value="AB+" {% if data.blood_type == 'AB+' %}selected{% endif %}>AB+</option>
+            <option value="AB-" {% if data.blood_type == 'AB-' %}selected{% endif %}>AB-</option>
+            <option value="O+" {% if data.blood_type == 'O+' %}selected{% endif %}>O+</option>
+            <option value="O-" {% if data.blood_type == 'O-' %}selected{% endif %}>O-</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="w-full py-3 bg-red-600 text-white rounded hover:bg-red-700">Save Changes</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Appointments Table -->
+    <section id="appointments" class="bg-white shadow-md rounded-xl p-8 scroll-mt-28">
+      <h2 class="text-2xl font-semibold text-red-600 mb-4">Appointments</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-2">ID</th>
+              <th class="px-4 py-2">Date</th>
+              <th class="px-4 py-2">Time</th>
+              <th class="px-4 py-2">Place</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if fr is not none %} {% for appointment in results %}
+            <tr class="border-t">
+              <td class="px-4 py-2">{{ appointment.appointment_id }}</td>
+              <td class="px-4 py-2">{{ appointment.appointment_date }}</td>
+              <td class="px-4 py-2">{{ appointment.appointment_time }}</td>
+              <td class="px-4 py-2">{{ appointment.place }}</td>
+            </tr>
+            {% endfor %} {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Donation History Table -->
+    <section id="donation-history" class="bg-white shadow-md rounded-xl p-8 scroll-mt-28">
+      <h2 class="text-2xl font-semibold text-red-600 mb-4">Donation History</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-2">ID</th>
+              <th class="px-4 py-2">Date</th>
+              <th class="px-4 py-2">Time</th>
+              <th class="px-4 py-2">Place</th>
+              <th class="px-4 py-2">Certificate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if fr is not none %} {% for frs in fr %}
+            <tr class="border-t">
+              <td class="px-4 py-2">{{ frs.appointment_id }}</td>
+              <td class="px-4 py-2">{{ frs.appointment_date }}</td>
+              <td class="px-4 py-2">{{ frs.appointment_time }}</td>
+              <td class="px-4 py-2">{{ frs.place }}</td>
+              <td class="px-4 py-2">
+                <a href="/gc/{{ frs.appointment_id }}" class="text-blue-600 hover:underline" target="_blank">Download</a>
+              </td>
+            </tr>
+            {% endfor %} {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>

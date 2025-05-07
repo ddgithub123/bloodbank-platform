@@ -1,0 +1,382 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Renova</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome for Icons -->
+  <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+
+  <!-- Highcharts for charts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+
+  <!-- Your Custom Chart Scripts -->
+  <script src="{{ url_for('static', filename='positiveChart.js') }}"></script>
+  <script src="{{ url_for('static', filename='negativeChart.js') }}"></script>
+  <script src="{{ url_for('static', filename='positiveChartOut.js') }}"></script>
+  <script src="{{ url_for('static', filename='negativeChartOut.js') }}"></script>
+
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+  
+<!-------------------------------------------------------------------------------------------------------------------->
+  <!-- Navbar -->
+  <nav class="w-full bg-white shadow-md fixed top-0 left-0 z-50 flex items-center justify-between px-8 py-6">
+    <a href="{{ url_for('index') }}" class="text-5xl font-bold text-red-600 hover:tracking-wide transition-all duration-300">Renova</a>
+    <div class="hidden md:flex gap-10 text-2xl font-semibold">
+      <a href="{{ url_for('Admin') }}" class="hover:text-red-600">Dashboard</a>
+
+      <div class="relative group">
+        <button class="hover:text-red-600">Requests</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded text-gray-700">
+          <a href="{{ url_for('Drequests') }}" class="block px-6 py-3 hover:bg-gray-100">Donor Requests</a>
+          <a href="{{ url_for('HRequests') }}" class="block px-6 py-3 hover:bg-gray-100">Blood Requests</a>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <button class="hover:text-red-600">Client</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded text-gray-700">
+          <a href="{{ url_for('Client', id='donor') }}" class="block px-6 py-3 hover:bg-gray-100">Donor List</a>
+          <a href="{{ url_for('Client', id='hospital') }}" class="block px-6 py-3 hover:bg-gray-100">Hospital List</a>
+          <a href="{{ url_for('Client', id='recipient') }}" class="block px-6 py-3 hover:bg-gray-100">Recipient List</a>
+        </div>
+      </div>
+
+      <a href="{{ url_for('logout') }}" class="hover:text-red-600">Logout</a>
+    </div>
+    <button class="md:hidden text-4xl text-red-600">
+      <i class="fa fa-bars"></i>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-40 px-8 max-w-7xl mx-auto">
+
+    <!-- Charts Section -->
+    <section class="mb-24">
+      <h2 class="text-5xl font-bold mb-16 text-center">Donation & Request Charts</h2>
+      <div class="grid md:grid-cols-2 gap-16">
+        <div class="bg-white p-8 rounded-lg shadow">
+          <h3 class="text-3xl font-semibold text-center mb-6">Donation (+ve)</h3>
+          <div id="positiveChart"></div>
+        </div>
+        <div class="bg-white p-8 rounded-lg shadow">
+          <h3 class="text-3xl font-semibold text-center mb-6">Donation (-ve)</h3>
+          <div id="negativeChart"></div>
+        </div>
+        <div class="bg-white p-8 rounded-lg shadow">
+          <h3 class="text-3xl font-semibold text-center mb-6">Requests (+ve)</h3>
+          <div id="positiveChartOut"></div>
+        </div>
+        <div class="bg-white p-8 rounded-lg shadow">
+          <h3 class="text-3xl font-semibold text-center mb-6">Requests (-ve)</h3>
+          <div id="negativeChartOut"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blood Inventory Table -->
+    <section class="mb-24">
+      <h2 class="text-5xl font-bold mb-16 text-center">Blood Inventory</h2>
+      <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="w-full text-center">
+          <thead class="bg-red-600 text-white text-xl">
+            <tr>
+              <th class="py-4">Type</th>
+              <th>In-Flow</th>
+              <th>Out-Flow</th>
+              <th>Inventory</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700 text-lg">
+            {% set blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
+            {% for i in range(8) %}
+            <tr class="border-b">
+              <td class="py-4 font-bold">{{ blood_types[i] }}</td>
+              <td>{{ in_qu[i] }}</td>
+              <td>{{ out_qu[i] }}</td>
+              <td>{{ inv[i] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Search Form -->
+    <section class="mb-32">
+      <h2 class="text-5xl font-bold mb-16 text-center">Search Blood Data</h2>
+      <form action="Admin" method="POST" class="bg-white p-12 rounded-lg shadow space-y-8 max-w-3xl mx-auto">
+        <div class="flex flex-col gap-4">
+          <label class="text-2xl font-semibold">Enter Date</label>
+          <input type="date" name="start_date" class="border-2 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+        <div class="flex flex-col gap-4">
+          <label class="text-2xl font-semibold">Blood Type</label>
+          <select name="bloodtype" class="border-2 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500">
+            <option value="A Positive">A+</option>
+            <option value="A Negative">A-</option>
+            <option value="B Positive">B+</option>
+            <option value="B Negative">B-</option>
+            <option value="O Positive">O+</option>
+            <option value="O Negative">O-</option>
+            <option value="AB Positive">AB+</option>
+            <option value="AB Negative">AB-</option>
+          </select>
+        </div>
+        <div class="flex justify-center">
+          <button type="submit" class="px-12 py-4 bg-red-600 text-white text-2xl rounded-lg hover:bg-red-700 transition-all">Search</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 py-16 text-center text-xl text-gray-600">
+    <p class="mb-2">&copy; 2025 Renova — Together, We Save Lives</p>
+    <p>Email: lifesaver102023@gmail.com | Phone: +91 9034597724</p>
+  </footer>
+  <script>
+    //NavBar Profile Click DropDown
+    let navbtn = document.querySelector(".nav-btn");
+    let navbtnclient = document.querySelector(".nav-btn2");
+
+    function showItemS() {
+      navbtn.classList.toggle("active");
+    }
+    document.addEventListener("click", function (event) {
+      if (event.target !== navbtn && !navbtn.contains(event.target)) {
+        if (navbtn.classList.contains("active"))
+          navbtn.classList.remove("active");
+      }
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        // Tab is minimized or Tab is moved, remove the "active" class
+        navbtn.classList.remove("active");
+      }
+    });
+
+    function showItemSClient() {
+      navbtnclient.classList.toggle("active");
+    }
+    document.addEventListener("click", function (event) {
+      if (event.target !== navbtnclient && !navbtnclient.contains(event.target)) {
+        if (navbtnclient.classList.contains("active"))
+          navbtnclient.classList.remove("active");
+      }
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        // Tab is minimized or Tab is moved, remove the "active" class
+        navbtnclient.classList.remove("active");
+      }
+    });
+
+
+    // InputBox Animation JS
+    const ips = document.querySelectorAll(".input");
+    ips.forEach((ip) => {
+      ip.addEventListener("focus", (e) => {
+        e.target.parentNode.classList.add("focus");
+      });
+      if (ip.value != "") {
+        ip.parentNode.classList.add("focus");
+      }
+
+      ip.addEventListener("blur", (e) => {
+        if (e.target.value === "") {
+          e.target.parentNode.classList.remove("focus");
+        }
+      });
+
+      ip.addEventListener("input", (e) => {
+        e.target.parentNode.classList.add("focus");
+      });
+    });
+
+     
+
+    // Js for Updating Value in Input after Selecting
+    function showCity(word) {
+      document.querySelector(".textBoxCity").value = word;
+    }
+    function showGender(word) {
+      document.querySelector(".textBoxGender").value = word;
+    }
+    function showBloodType(word) {
+      document.querySelector(".textBoxBlood").value = word;
+    }
+
+    // Loop through all .dropdown elements
+    let dd = document.querySelectorAll(".dropdown");
+    dd.forEach(function (dropdown) {
+      dropdown.addEventListener("click", function () {
+        dropdown.classList.toggle("active");
+      });
+
+      dropdown.addEventListener("focus", function () {
+        dropdown.classList.add("active");
+      });
+
+      dropdown.addEventListener("blur", function () {
+        dropdown.classList.remove("active");
+      });
+      document.addEventListener("click", function (event) {
+        if (event.target !== dropdown && !dropdown.contains(event.target)) {
+          if (dropdown.classList.contains("active"))
+            dropdown.classList.remove("active");
+        }
+      });
+    });
+
+
+    // Flash Message JS
+    const fmsg = document.querySelector(".flash-messages");
+
+    setTimeout(() => {
+      if (fmsg.classList.contains("active")) {
+        fmsg.classList.remove("active");
+      }
+    }, 3000);
+
+    const ims = document.querySelector(".inner");
+    if (ims !== null && ims.textContent != "") {
+      fmsg.classList.add("active");
+    }
+
+    //City Search Box Js
+
+    function fetchCities() {
+      fetch("/get_cities_json")
+        .then((response) => response.json())
+        .then((data) => {
+          var cities = data["cities"];
+          const resultBox = document.getElementById("OptionsCity");
+          const inputBox = document.getElementById("CitytextBox");
+          const rBHTML=resultBox.innerHTML;
+          inputBox.onkeyup = function () {
+
+            let result = [];
+            let input = inputBox.value;
+            if (input.length) {
+              result = cities.filter((keyword) => {
+                return keyword.toLowerCase().startsWith(input.toLowerCase());
+              });
+            }
+
+            display(result);
+
+            if(!result.length){
+              resultBox.innerHTML = "";
+            }
+            if(!input.length){
+              resultBox.innerHTML = rBHTML;
+            }
+          };
+
+          function display(result) {
+            resultBox.innerHTML = "";
+            const content = result.map((div)=>{
+              return '<div onclick=showCity(this.innerHTML)>' + div +'</div>';
+            });
+            resultBox.innerHTML = content.join('');
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+    fetchCities();
+
+
+    //JS for Options on LEft Side
+    let ops=document.querySelectorAll('.ops');
+
+    ops.forEach((op)=>{
+      op.addEventListener("click",(e)=>{
+          
+          ops.forEach(op=>{
+              if(op.classList.contains('selected')){
+                  op.classList.remove('selected');
+              }
+          })
+          e.target.classList.add('selected');
+      })
+    })
+
+    //->Hamburger Menu JS<-
+  const menu_btn = document.querySelector('.hamburger');
+  const mobile_menu = document.querySelector('.mobile-nav');
+  const Req=document.getElementById('req');
+  const Reqops=document.querySelectorAll('.req-ops');
+  const Client=document.getElementById('client');
+  const Clientops=document.querySelectorAll('.client-ops');
+
+  menu_btn.addEventListener('click', function () {
+    menu_btn.classList.toggle('is-active');
+    mobile_menu.classList.toggle('is-active');
+    if(!menu_btn.classList.contains('is-active')){
+      Reqops.forEach((element) => {
+        element.classList.add('hidden');
+      });
+      Clientops.forEach((element) => {
+        element.classList.add('hidden');
+      });
+    }
+  });
+
+  //for Request 
+  Req.addEventListener('click', (e) => {
+    Reqops.forEach((element) => {
+      element.classList.toggle('hidden');
+    });
+  });
+  //for Client 
+  
+  Client.addEventListener('click', (e) => {
+    Clientops.forEach((element) => {
+      element.classList.toggle('hidden');
+    });
+  });
+  //Hamburger Menu JS OVER
+
+
+  //->Back To Top Button JS<-
+  // Get the button element
+  var btn = document.getElementById("button");
+
+  // Add a scroll event listener to the window
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 300) {
+      // Add the "show" class when scrolled down
+      btn.classList.add("show");
+    } else {
+      // Remove the "show" class when at the top
+      btn.classList.remove("show");
+    }
+  });
+
+  // Add a click event listener to the button
+  btn.addEventListener("click", function (e) {
+    e.preventDefault();
+    // Smoothly scroll to the top
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+  </script>
+</body>
+</html>

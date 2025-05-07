@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Renova | Get Blood</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+  <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-red-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 w-full bg-white shadow z-50 px-8 py-4 flex justify-between items-center">
+    <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+    <div class="hidden md:flex gap-8 text-lg">
+      <a href="{{ url_for('index') }}" class="hover:text-red-500">Home</a>
+      <a href="{{ url_for('about') }}" class="hover:text-red-500">About</a>
+      <a href="{{ url_for('contact') }}" class="hover:text-red-500">Contact</a>
+      {% if user is none %}
+        <a href="{{ url_for('login') }}" class="hover:text-red-500">Login</a>
+      {% else %}
+      <div class="relative group">
+        <img src="{{ src }}" class="w-10 h-10 rounded-full border cursor-pointer" />
+        <div class="absolute hidden group-hover:block right-0 mt-2 w-44 bg-white rounded-md shadow-md py-2">
+          <a href="{{ url_for('HProfile') }}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+          <a href="{{ url_for('HRecipients') }}" class="block px-4 py-2 hover:bg-gray-100">Add Recipients</a>
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-32 max-w-4xl mx-auto px-6 pb-20">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ messages[-1] }}
+      </div>
+    {% endif %}
+    {% endwith %}
+
+    <h1 class="text-3xl font-bold text-red-600 mb-8">Book Blood Transfusion</h1>
+
+    <form method="POST" action="getblood" class="bg-white p-8 rounded-xl shadow space-y-6">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label class="font-medium">Recipient ID</label>
+          <input type="text" name="recipient_id" required class="w-full mt-1 p-3 border border-red-300 rounded">
+        </div>
+        <div>
+          <label class="font-medium">Date</label>
+          <input type="date" name="transfusion_date" value="{{ cd }}" required class="w-full mt-1 p-3 border border-red-300 rounded">
+        </div>
+        <div>
+          <label class="font-medium">Quantity</label>
+          <input type="text" name="quantity_transfused" required class="w-full mt-1 p-3 border border-red-300 rounded">
+        </div>
+        <div>
+          <label class="font-medium">City 1</label>
+          <select name="city1" required class="w-full mt-1 p-3 border border-red-300 rounded">
+            <option disabled selected value="">Select City 1</option>
+            {% for city in cities %}
+              <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="font-medium">City 2</label>
+          <select name="city2" required class="w-full mt-1 p-3 border border-red-300 rounded">
+            <option disabled selected value="">Select City 2</option>
+            {% for city in cities %}
+              <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="font-medium">City 3</label>
+          <select name="city3" required class="w-full mt-1 p-3 border border-red-300 rounded">
+            <option disabled selected value="">Select City 3</option>
+            {% for city in cities %}
+              <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="text-right">
+        <button type="submit" class="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700">Book Appointment</button>
+      </div>
+    </form>
+  </main>
+</body>
+
+</html>

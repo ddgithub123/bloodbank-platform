@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Renova | Hospital Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 w-full bg-white shadow z-50 px-8 py-4 flex justify-between items-center">
+    <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+    <div class="hidden md:flex gap-10 text-lg">
+      <a href="{{ url_for('index') }}" class="hover:text-red-500">Home</a>
+      <a href="{{ url_for('about') }}" class="hover:text-red-500">About</a>
+      <a href="{{ url_for('contact') }}" class="hover:text-red-500">Contact</a>
+      <div class="relative group">
+        <img src="{{ src }}" class="w-10 h-10 rounded-full border cursor-pointer" />
+        <div class="absolute hidden group-hover:block right-0 mt-2 w-44 bg-white rounded-md shadow-md py-2">
+          <a href="{{ url_for('HAppointment') }}" class="block px-4 py-2 hover:bg-gray-100">Get Blood</a>
+          <a href="{{ url_for('HRecipients') }}" class="block px-4 py-2 hover:bg-gray-100">Add Recipient</a>
+          <a href="{{ url_for('HProfile') }}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Dashboard -->
+  <main class="pt-32 max-w-6xl mx-auto px-6 pb-16">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+          {{ messages[-1] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h1 class="text-4xl font-bold text-red-600 mb-8 text-center">Hospital Dashboard</h1>
+
+    <section class="grid md:grid-cols-2 gap-10">
+      <!-- Profile -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-semibold text-red-500 mb-4">Profile Information</h2>
+        <form action="/HProfile" method="POST" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium">E-Mail ID</label>
+            <input type="text" name="email" value="{{ user.h_email_id }}" readonly class="w-full border px-4 py-2 rounded bg-gray-100">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Hospital Name</label>
+            <input type="text" name="Fname" value="{{ user.name }}" readonly class="w-full border px-4 py-2 rounded bg-gray-100">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Address</label>
+            <textarea name="address" class="w-full border px-4 py-2 rounded">{{ '' if user.address is none else user.address }}</textarea>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium">City</label>
+              <input type="text" name="city" value="{{ user.city }}" readonly class="w-full border px-4 py-2 rounded bg-gray-100">
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Mobile No.</label>
+              <input type="text" name="mob" value="{{ user.contact_phone }}" readonly class="w-full border px-4 py-2 rounded bg-gray-100">
+            </div>
+          </div>
+          <div class="text-center mt-6">
+            <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700">Update</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Appointments -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-semibold text-red-500 mb-4">Appointments</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="py-2 px-4">Transfusion ID</th>
+                <th class="py-2 px-4">Blood Group</th>
+                <th class="py-2 px-4">Date</th>
+                <th class="py-2 px-4">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t">
+                <td class="py-2 px-4">9</td>
+                <td class="py-2 px-4">O+</td>
+                <td class="py-2 px-4">2025-04-29</td>
+                <td class="py-2 px-4">100.0</td>
+              </tr>
+              {% for appointment in results %}
+              <tr class="border-t">
+                <td class="py-2 px-4">{{ appointment.transfusion_id }}</td>
+                <td class="py-2 px-4">{{ appointment.blood_type }}</td>
+                <td class="py-2 px-4">{{ appointment.transfusion_date }}</td>
+                <td class="py-2 px-4">{{ appointment.quantity_transfused }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- History -->
+    <div class="mt-16 bg-white shadow-md rounded-lg p-6">
+      <h2 class="text-2xl font-semibold text-red-500 mb-4">History</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left border">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="py-2 px-4">Transfusion ID</th>
+              <th class="py-2 px-4">Blood Group</th>
+              <th class="py-2 px-4">Date</th>
+              <th class="py-2 px-4">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for frs in results %}
+            {% if frs.status == 1 %}
+            <tr class="border-t">
+              <td class="py-2 px-4">{{ frs.transfusion_id }}</td>
+              <td class="py-2 px-4">{{ frs.blood_type }}</td>
+              <td class="py-2 px-4">{{ frs.transfusion_date }}</td>
+              <td class="py-2 px-4">{{ frs.quantity_transfused }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

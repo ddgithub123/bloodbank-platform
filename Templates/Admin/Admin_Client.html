@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Client | Renova</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-red-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow fixed top-0 left-0 w-full px-8 py-4 z-50 flex justify-between items-center">
+    <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+    <div class="hidden md:flex gap-8 text-lg">
+      <a href="{{ url_for('Admin') }}" class="hover:text-red-500">Dashboard</a>
+
+      <div class="relative group">
+        <button class="hover:text-red-500">Requests</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded-md py-2 w-48">
+          <a href="{{ url_for('Drequests') }}" class="block px-4 py-2 hover:bg-red-100">Donor Requests</a>
+          <a href="{{ url_for('HRequests') }}" class="block px-4 py-2 hover:bg-red-100">Blood Requests</a>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <button class="hover:text-red-500">Client</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded-md py-2 w-48">
+          <a href="{{ url_for('Client', id='donor') }}" class="block px-4 py-2 hover:bg-red-100">Donor List</a>
+          <a href="{{ url_for('Client', id='hospital') }}" class="block px-4 py-2 hover:bg-red-100">Hospital List</a>
+          <a href="{{ url_for('Client', id='recipient') }}" class="block px-4 py-2 hover:bg-red-100">Recipient List</a>
+        </div>
+      </div>
+
+      <a href="{{ url_for('logout') }}" class="hover:text-red-500">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="pt-32 max-w-6xl mx-auto px-4">
+    <h1 class="text-3xl font-bold text-center text-red-600 mb-6">{{ id.capitalize() }} List</h1>
+
+    <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+      <table class="min-w-full text-left">
+        <thead class="bg-red-600 text-white">
+          {% if id == 'donor' %}
+          <tr>
+            <th class="px-6 py-3">Donor ID</th>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">DOB</th>
+            <th class="px-6 py-3">Blood Type</th>
+            <th class="px-6 py-3">City</th>
+          </tr>
+          {% elif id == 'hospital' %}
+          <tr>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Email ID</th>
+            <th class="px-6 py-3">Contact</th>
+            <th class="px-6 py-3">City</th>
+          </tr>
+          {% elif id == 'recipient' %}
+          <tr>
+            <th class="px-6 py-3">Recipient ID</th>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">DOB</th>
+            <th class="px-6 py-3">Blood Type</th>
+            <th class="px-6 py-3">Hospital Email</th>
+          </tr>
+          {% endif %}
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for dr in drs %}
+          <tr class="hover:bg-red-50">
+            {% if id == 'donor' %}
+            <td class="px-6 py-4 font-medium">{{ dr.donor_id }}</td>
+            <td class="px-6 py-4">{{ dr.first_name + ' ' + dr.middle_name + ' ' + dr.last_name }}</td>
+            <td class="px-6 py-4">{{ dr.date_of_birth }}</td>
+            <td class="px-6 py-4">{{ dr.blood_type }}</td>
+            <td class="px-6 py-4">{{ dr.city }}</td>
+            {% elif id == 'hospital' %}
+            <td class="px-6 py-4 font-medium">{{ dr.name }}</td>
+            <td class="px-6 py-4">{{ dr.h_email_id }}</td>
+            <td class="px-6 py-4">{{ dr.contact_phone }}</td>
+            <td class="px-6 py-4">{{ dr.city }}</td>
+            {% elif id == 'recipient' %}
+            <td class="px-6 py-4 font-medium">{{ dr.recipient_id }}</td>
+            <td class="px-6 py-4">{{ dr.first_name + ' ' + dr.last_name }}</td>
+            <td class="px-6 py-4">{{ dr.date_of_birth }}</td>
+            <td class="px-6 py-4">{{ dr.blood_type }}</td>
+            <td class="px-6 py-4"><a href="mailto:{{ dr.h_email_id }}" class="text-red-500 hover:underline">{{ dr.h_email_id }}</a></td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+
+</html>

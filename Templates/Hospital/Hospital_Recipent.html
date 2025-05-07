@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Renova | Add Recipients</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-red-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 w-full bg-white shadow z-50 px-8 py-4 flex justify-between items-center">
+    <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+    <div class="hidden md:flex gap-10 text-lg">
+      <a href="{{ url_for('index') }}" class="hover:text-red-500">Home</a>
+      <a href="{{ url_for('about') }}" class="hover:text-red-500">About</a>
+      <a href="{{ url_for('contact') }}" class="hover:text-red-500">Contact</a>
+      <div class="relative group">
+        <img src="{{ src }}" class="w-10 h-10 rounded-full border cursor-pointer" />
+        <div class="absolute hidden group-hover:block right-0 mt-2 w-44 bg-white rounded-md shadow-md py-2">
+          <a href="{{ url_for('HProfile') }}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+          <a href="{{ url_for('HAppointment') }}" class="block px-4 py-2 hover:bg-gray-100">Get Blood</a>
+          <a href="{{ url_for('HRecipients') }}" class="block px-4 py-2 hover:bg-gray-100">Add Recipient</a>
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Section -->
+  <main class="pt-32 max-w-6xl mx-auto px-6 pb-20">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ messages[-1] }}
+      </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-red-600">Recipients</h1>
+      <button onclick="document.getElementById('formModal').classList.remove('hidden')" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700">
+        + Add New Recipient
+      </button>
+    </div>
+
+    <!-- Recipients Table -->
+    <div class="bg-white rounded-lg shadow p-6 overflow-x-auto">
+      <table class="min-w-full text-left">
+        <thead class="bg-red-100">
+          <tr>
+            <th class="px-4 py-2">Recipient ID</th>
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">DOB</th>
+            <th class="px-4 py-2">Gender</th>
+            <th class="px-4 py-2">Blood Group</th>
+            <th class="px-4 py-2">Phone No.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for res in ress %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ res.recipient_id }}</td>
+            <td class="px-4 py-2">{{ res.first_name + " " + res.last_name }}</td>
+            <td class="px-4 py-2">{{ res.date_of_birth }}</td>
+            <td class="px-4 py-2">{{ res.gender }}</td>
+            <td class="px-4 py-2">{{ res.blood_type }}</td>
+            <td class="px-4 py-2">{{ res.contact_phone }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Form -->
+  <div id="formModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-semibold text-red-600">Add New Recipient</h2>
+        <button onclick="document.getElementById('formModal').classList.add('hidden')" class="text-3xl font-bold">&times;</button>
+      </div>
+      <form action="HRadd" method="POST" class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <input type="text" name="fname" placeholder="First Name" required class="w-full border px-4 py-2 rounded">
+          <input type="text" name="lname" placeholder="Last Name" required class="w-full border px-4 py-2 rounded">
+          <input type="date" name="DOB" required class="w-full border px-4 py-2 rounded">
+          <select name="gender" required class="w-full border px-4 py-2 rounded">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <input type="text" name="mob" placeholder="Mobile Number" required class="w-full border px-4 py-2 rounded">
+          <input type="email" name="emailid" placeholder="Email" required class="w-full border px-4 py-2 rounded">
+          <select name="Btype" required class="w-full border px-4 py-2 rounded">
+            <option value="A+">A+</option>
+            <option value="B+">B+</option>
+            <option value="AB+">AB+</option>
+            <option value="O+">O+</option>
+            <option value="A-">A-</option>
+            <option value="B-">B-</option>
+            <option value="AB-">AB-</option>
+            <option value="O-">O-</option>
+          </select>
+          <input type="text" name="mhis" placeholder="Medical History" required class="w-full border px-4 py-2 rounded">
+        </div>
+        <textarea name="address" placeholder="Address" required class="w-full border px-4 py-2 rounded"></textarea>
+        <div class="text-right">
+          <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700">Add Recipient</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

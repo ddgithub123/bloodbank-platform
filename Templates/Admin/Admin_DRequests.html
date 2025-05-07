@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donation Requests | Renova</title>
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+
+  <!-- Highcharts (Optional if you use charts here later) -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Navbar -->
+  <nav class="w-full bg-white shadow-md fixed top-0 left-0 z-50 flex items-center justify-between px-8 py-6">
+    <a href="{{ url_for('index') }}" class="text-5xl font-bold text-red-600 hover:tracking-wide transition-all duration-300">Renova</a>
+    <div class="hidden md:flex gap-10 text-2xl font-semibold">
+      <a href="{{ url_for('Admin') }}" class="hover:text-red-600">Dashboard</a>
+
+      <div class="relative group">
+        <button class="hover:text-red-600">Requests</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded text-gray-700">
+          <a href="{{ url_for('Drequests') }}" class="block px-6 py-3 hover:bg-gray-100">Donor Requests</a>
+          <a href="{{ url_for('HRequests') }}" class="block px-6 py-3 hover:bg-gray-100">Blood Requests</a>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <button class="hover:text-red-600">Client</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded text-gray-700">
+          <a href="{{ url_for('Client', id='donor') }}" class="block px-6 py-3 hover:bg-gray-100">Donor List</a>
+          <a href="{{ url_for('Client', id='hospital') }}" class="block px-6 py-3 hover:bg-gray-100">Hospital List</a>
+          <a href="{{ url_for('Client', id='recipient') }}" class="block px-6 py-3 hover:bg-gray-100">Recipient List</a>
+        </div>
+      </div>
+
+      <a href="{{ url_for('logout') }}" class="hover:text-red-600">Logout</a>
+    </div>
+
+    <button class="md:hidden text-4xl text-red-600">
+      <i class="fa fa-bars"></i>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-40 px-8 max-w-7xl mx-auto">
+
+    <!-- Page Title -->
+    <div class="text-5xl font-bold mb-16 text-center text-red-600">Donation Requests</div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="bg-red-100 text-red-700 p-4 rounded mb-12 text-center text-xl">
+          {{ messages[-1] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Appointment Requests Table -->
+    <div class="overflow-x-auto bg-white rounded-lg shadow mb-24">
+      <table class="w-full text-center">
+        <thead class="bg-red-600 text-white text-xl">
+          <tr>
+            <th class="py-4">Appointment ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Place</th>
+            <th>Fill Form</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-700 text-lg">
+          {% for appo in ua %}
+          {% if not appo.ddone %}
+          <tr class="border-b">
+            <td class="py-4 font-bold">{{ appo.appointment_id }}</td>
+            <td>{{ appo.appointment_date }}</td>
+            <td>{{ appo.appointment_time }}</td>
+            <td>{{ appo.place }}</td>
+            <td>
+              <button class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                onclick="OpenForm('{{ appo.appointment_id }}','{{ appo.appointment_date }}')">
+                Fill
+              </button>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Donation Form Modal -->
+    <form method="POST" action="DAccepted">
+      <div class="overlay fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+        <div class="bg-white rounded-2xl w-[90%] max-w-2xl p-8 space-y-8">
+          <div class="flex justify-between items-center">
+            <h3 class="text-3xl font-bold text-red-600">Donation Form</h3>
+            <button type="button" class="text-4xl font-bold text-gray-700" onclick="CloseForm()">&times;</button>
+          </div>
+
+          <div class="space-y-6">
+            <div class="flex flex-col">
+              <label class="text-xl font-semibold mb-2">Appointment ID</label>
+              <input type="text" name="AID" class="border-2 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500 apid" required readonly>
+            </div>
+
+            <div class="flex flex-col">
+              <label class="text-xl font-semibold mb-2">Collection Date</label>
+              <input type="date" name="seD" class="border-2 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500 apdate" required>
+            </div>
+
+            <div class="flex flex-col">
+              <label class="text-xl font-semibold mb-2">Quantity Donated</label>
+              <input type="text" name="QD" class="border-2 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500 quantity" required>
+            </div>
+
+            <div class="flex justify-center">
+              <button type="submit" class="px-12 py-4 bg-red-600 text-white text-2xl rounded-lg hover:bg-red-700 transition-all">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 py-16 text-center text-xl text-gray-600">
+    <p class="mb-2">&copy; 2025 Renova — Together, We Save Lives</p>
+    <p>Email: lifesaver102023@gmail.com | Phone: +91 9034597724</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const overlay = document.querySelector('.overlay');
+    const apid = document.querySelector('.apid');
+    const apdate = document.querySelector('.apdate');
+    const quantity = document.querySelector('.quantity');
+
+    function OpenForm(id, date) {
+      overlay.classList.remove('hidden');
+      apid.value = id;
+      apdate.value = date;
+    }
+
+    function CloseForm() {
+      overlay.classList.add('hidden');
+      apid.value = '';
+      apdate.value = '';
+      quantity.value = '';
+    }
+  </script>
+
+</body>
+
+</html>

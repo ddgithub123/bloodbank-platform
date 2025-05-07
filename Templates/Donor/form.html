@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Renova | Book Donation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow fixed top-0 left-0 w-full px-8 py-4 z-50 flex justify-between items-center">
+    <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+    <div class="hidden md:flex gap-8 text-lg">
+      <a href="{{ url_for('index') }}" class="hover:text-red-500">Home</a>
+      <a href="{{ url_for('about') }}" class="hover:text-red-500">About</a>
+      <a href="{{ url_for('contact') }}" class="hover:text-red-500">Contact</a>
+      {% if user is none %}
+      <a href="{{ url_for('login') }}" class="hover:text-red-500">Login</a>
+      {% else %}
+      <div class="relative group">
+        <img src="{{ src }}" class="w-10 h-10 rounded-full border cursor-pointer" />
+        <div class="absolute hidden group-hover:block right-0 mt-2 w-40 bg-white rounded-md shadow-md py-2">
+          <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto mt-32 mb-16 px-6">
+    <div class="mb-10 text-center">
+      <h1 class="text-4xl font-bold text-red-600 mb-2">Book a Blood Donation Appointment</h1>
+      <p class="text-lg text-gray-600">This form allows registered donors to schedule an appointment for donating blood at a location of their choice.</p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+      {{ messages[-1] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="bg-white shadow-md rounded-xl p-8 space-y-10">
+      <!-- Donor Info -->
+      <section>
+        <h2 class="text-2xl font-bold text-red-600 mb-6">Personal Details</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="font-medium">Donor ID</label>
+            <input type="text" value="{{ data.donor_id }}" readonly class="w-full mt-1 p-3 border rounded bg-gray-100">
+          </div>
+          <div>
+            <label class="font-medium">Name</label>
+            <input type="text" value="{{ data.first_name + ' ' + data.middle_name + ' ' + data.last_name }}" readonly class="w-full mt-1 p-3 border rounded bg-gray-100">
+          </div>
+          <div>
+            <label class="font-medium">Date of Birth</label>
+            <input type="date" value="{{ data.date_of_birth }}" readonly class="w-full mt-1 p-3 border rounded bg-gray-100">
+          </div>
+          <div>
+            <label class="font-medium">Blood Type</label>
+            <input type="text" value="{{ data.blood_type }}" readonly class="w-full mt-1 p-3 border rounded bg-gray-100">
+          </div>
+        </div>
+      </section>
+
+      <!-- Appointment Form -->
+      <form action="booking" method="POST">
+        <h2 class="text-2xl font-bold text-red-600 mb-6">Appointment Schedule</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="font-medium">Date</label>
+            <input type="date" required name="date" class="w-full mt-1 p-3 border border-red-300 rounded">
+          </div>
+          <div>
+            <label class="font-medium">Time</label>
+            <input type="time" required name="time" class="w-full mt-1 p-3 border border-red-300 rounded">
+          </div>
+          <div class="md:col-span-2">
+            <label class="font-medium">Place</label>
+            <div class="relative">
+              <input type="text" name="place" id="CitytextBox" class="w-full mt-1 p-3 border border-red-300 rounded" value="{{ data.city }}" required>
+              <div class="absolute bg-white shadow-md rounded-md mt-1 w-full z-10 hidden" id="OptionsCity">
+                {% for city in cities %}
+                <div onclick='showCity("{{ city }}")' class="px-4 py-2 hover:bg-red-100 cursor-pointer">{{ city }}</div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center">
+          <button type="submit" class="px-10 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Book Appointment</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    function showCity(word) {
+      document.querySelector("#CitytextBox").value = word;
+    }
+
+    function fetchCities() {
+      fetch("/get_cities_json")
+        .then((res) => res.json())
+        .then((data) => {
+          const cities = data["cities"];
+          const resultBox = document.getElementById("OptionsCity");
+          const inputBox = document.getElementById("CitytextBox");
+          inputBox.addEventListener("input", function () {
+            const value = this.value.toLowerCase();
+            const result = cities.filter((c) => c.toLowerCase().startsWith(value));
+            if (result.length === 0) {
+              resultBox.classList.add("hidden");
+            } else {
+              resultBox.classList.remove("hidden");
+              resultBox.innerHTML = result.map(city => `<div onclick='showCity("${city}")' class='px-4 py-2 hover:bg-red-100 cursor-pointer'>${city}</div>`).join('');
+            }
+          });
+          document.addEventListener("click", (e) => {
+            if (!resultBox.contains(e.target) && e.target !== inputBox) {
+              resultBox.classList.add("hidden");
+            }
+          });
+        });
+    }
+    fetchCities();
+  </script>
+</body>
+
+</html>
