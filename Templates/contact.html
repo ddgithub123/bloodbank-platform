@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | Renova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white shadow fixed top-0 left-0 w-full px-8 py-4 z-50 flex justify-between items-center">
+      <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+      <div class="hidden md:flex gap-8 text-lg">
+        <a href="{{ url_for('index') }}" class="hover:text-red-500">Home</a>
+        <a href="{{ url_for('about') }}" class="hover:text-red-500">About</a>
+        <a href="{{ url_for('contact') }}" class="hover:text-red-500 font-semibold">Contact</a>
+        {% if user is none %}
+        <a href="{{ url_for('login') }}" class="hover:text-red-500">Login</a>
+        {% else %}
+        <div class="relative group">
+          <img src="{{ src }}" class="w-10 h-10 rounded-full border cursor-pointer" />
+          <div class="absolute hidden group-hover:block right-0 mt-2 w-40 bg-white rounded-md shadow-md py-2">
+            <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+            <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </nav>
+
+    <main class="pt-32 px-6 max-w-5xl mx-auto">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ messages[-1] }}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      <section class="bg-white shadow rounded-xl p-8 mb-12">
+        <h2 class="text-3xl font-bold text-red-600 mb-4">Contact Us</h2>
+        <p class="text-lg text-gray-600 mb-6">
+          Have questions, suggestions, or want to collaborate with us? Get in touch below.
+        </p>
+        <div class="grid md:grid-cols-2 gap-10">
+          <!-- Contact Info -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-location-dot text-red-600"></i>
+              <p>Surat, Gujarat</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-envelope text-red-600"></i>
+              <p>lifesaver102023@gmail.com</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-phone text-red-600"></i>
+              <p>+91 9083462356</p>
+            </div>
+            <div>
+              <p class="mb-2">Connect with us:</p>
+              <div class="flex gap-4 text-red-600 text-2xl">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <form action="/feedback" method="POST" class="space-y-6">
+            <div>
+              <label class="block font-medium">Name</label>
+              <input type="text" name="uname" required class="w-full mt-1 p-3 border rounded">
+            </div>
+            <div>
+              <label class="block font-medium">Email</label>
+              <input type="email" name="email" required class="w-full mt-1 p-3 border rounded">
+            </div>
+            <div>
+              <label class="block font-medium">Phone Number</label>
+              <input type="tel" name="phone" required class="w-full mt-1 p-3 border rounded">
+            </div>
+            <div>
+              <label class="block font-medium">Message</label>
+              <textarea name="message" rows="5" required class="w-full mt-1 p-3 border rounded"></textarea>
+            </div>
+            <button type="submit" class="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 transition">Send</button>
+          </form>
+        </div>
+      </section>
+    </main>
+    
+    <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+  </body>
+</html>

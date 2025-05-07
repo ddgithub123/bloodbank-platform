@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | RedStream</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800 text-xl">
+  <div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col md:grid md:grid-cols-2">
+      <!-- Left: Flash & Header -->
+      <div class="bg-red-600 text-white p-10 flex flex-col justify-center relative">
+        <h2 class="text-5xl font-extrabold mb-4 leading-snug">Welcome Back to <span class="text-white italic">Renova</span></h2>
+        <p class="text-xl leading-relaxed">Your journey to saving lives continues here. Login below to access your dashboard.</p>
+    
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="mt-6 bg-white text-red-600 p-4 rounded shadow text-lg">
+            {{ messages[-1] }}
+          </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+      <!-- Right: Login Form -->
+      <div class="p-8 md:p-12 w-full flex flex-col justify-center">
+        <div class="flex gap-6 mb-10 text-lg md:text-2xl">
+          <a href="{{ url_for('login') }}" class="text-red-600 font-semibold border-b-4 border-red-600 pb-1">Login</a>
+          <a href="{{ url_for('register') }}" class="text-gray-500 hover:text-red-600 font-semibold pb-1">Register</a>
+        </div>
+
+        <form action="/login" method="POST" class="space-y-6 md:space-y-8">
+          <div>
+            <label for="user_id" class="block mb-2 text-lg md:text-xl font-medium">User ID</label>
+            <input type="text" name="user_id" id="user_id" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+          </div>
+
+          <div class="relative">
+            <label for="password" class="block mb-2 text-lg md:text-xl font-medium">Password</label>
+            <input type="password" name="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+            <i class="fa-solid fa-eye-slash absolute right-4 top-14 text-gray-500 cursor-pointer" onclick="togglePassword()"></i>
+          </div>
+
+          <div class="flex flex-wrap gap-6 text-lg md:text-xl mt-2">
+            <label class="flex items-center gap-2">
+              <input type="radio" name="admin" value="donor" checked>
+              Donor
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="admin" value="hospital">
+              Hospital
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="admin" value="admin">
+              Admin
+            </label>
+          </div>
+
+          <div class="text-right text-base text-red-500 mt-2">
+            <a href="{{ url_for('forget') }}">Forget Password?</a>
+          </div>
+
+          <div>
+            <button type="submit" class="w-full bg-red-600 text-white py-4 rounded-lg text-xl md:text-2xl font-bold hover:bg-red-700 transition-all">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const input = document.getElementById("password");
+      const icon = event.target;
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      }
+    }
+  </script>
+</body>
+
+</html>

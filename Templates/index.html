@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Renova</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body class="bg-gray-50 text-gray-800 text-4xl md:text-6xl">
+  <!-- Navigation Bar -->
+  <nav class="w-full bg-white shadow-md px-10 py-6 flex items-center justify-between fixed top-0 left-0 z-50">
+    <a href="{{ url_for('index') }}" class="text-5xl font-bold text-red-600 hover:tracking-wide transition-all duration-300">Renova</a>
+    <div class="hidden md:flex gap-12 text-3xl font-semibold">
+      <a href="{{ url_for('index') }}" class="hover:text-red-600">Home</a>
+      <a href="{{ url_for('about') }}" class="hover:text-red-600">About</a>
+      <a href="{{ url_for('contact') }}" class="hover:text-red-600">Contact</a>
+      {% if user is none %}
+        <a href="{{ url_for('login') }}" class="hover:text-red-600">Login</a>
+        {% else %}
+        {% if user.has_role('hospital') %}
+          <a href="{{ url_for('HProfile') }}" class="hover:text-red-600">Dashboard</a>
+        {% elif user.has_role('admin') %}
+          <a href="{{ url_for('Admin') }}" class="hover:text-red-600">Dashboard</a>
+        {% else %}
+          <a href="{{ url_for('profile') }}" class="hover:text-red-600">Dashboard</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" class="hover:text-red-600">Logout</a>
+      {% endif %}
+      
+    </div>
+    <button class="md:hidden text-4xl text-red-600">
+      <i class="fa fa-bars"></i>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="text-center py-48 bg-white mt-32">
+    <h1 class="text-8xl font-extrabold text-red-600 mb-6">Every Drop Counts</h1>
+    <p class="text-4xl text-gray-700">Be a real-life hero. Give blood, give life.</p>
+  </section>
+
+  <!-- Donation Process -->
+  <section class="max-w-6xl mx-auto py-24 px-8">
+    <h2 class="text-6xl font-bold mb-16 text-center">How It Works</h2>
+    <div class="grid md:grid-cols-4 gap-16 text-center">
+      <div>
+        <p class="text-3xl font-semibold text-red-600 mb-4">Register</p>
+        <p class="text-gray-700 text-xl">Sign up and share your details.</p>
+      </div>
+      <div>
+        <p class="text-3xl font-semibold text-red-600 mb-4">Screening</p>
+        <p class="text-gray-700 text-xl">Quick health check to ensure you're fit.</p>
+      </div>
+      <div>
+        <p class="text-3xl font-semibold text-red-600 mb-4">Donate</p>
+        <p class="text-gray-700 text-xl">Just 10–15 minutes to save lives.</p>
+      </div>
+      <div>
+        <p class="text-3xl font-semibold text-red-600 mb-4">Recover</p>
+        <p class="text-gray-700 text-xl">Grab a snack, relax — you've earned it!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="bg-white py-32 text-center px-8">
+    <h2 class="text-6xl font-bold mb-10">Ready to Make a Difference?</h2>
+    <p class="max-w-4xl mx-auto text-gray-700 text-3xl mb-12">Your donation could be the reason someone smiles tomorrow. Be the difference. Be the donor.</p>
+    {% if user is none %}
+      <a href="{{ url_for('aperror') }}" class="inline-block px-16 py-6 bg-red-600 text-white text-3xl rounded hover:bg-red-700 transition-all">Donate Now</a>
+    {% else %}
+      <a href="{{ url_for('appointment') }}" class="inline-block px-16 py-6 bg-red-600 text-white text-3xl rounded hover:bg-red-700 transition-all">Donate Now</a>
+    {% endif %}
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 py-16 text-center text-xl text-gray-600">
+    <p class="mb-2">&copy; 2025 Renova — Together, We Save Lives</p>
+    <p>Email: lifesaver102023@gmail.com | Phone: +91 9034597724</p>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Password</title>
+    <script src="https://kit.fontawesome.com/3b57b3cea0.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="icon" href="../static/images/favicon.png">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="c-left">
+            <!-- Flash message start -->
+            <div  class="flash-messages">
+                <!-- <p>This is Error message</p> -->
+                <div class="msg">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="inner">
+                        {{ messages[-1] }}  <!-- Display the last message in the list -->
+                    </div>
+                    
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="c-right">
+            <div class="confirm-box">
+
+            <div class="c-box">
+                <div class="c-header">
+                    Forget Your Password?
+                </div>
+                
+                
+                <div class="login-details">
+                    <form action="/forget" method="POST">
+                        <div class="ip username">
+                            <input type="text" name="email" required>
+                            <label for="">E-Mail</label>
+                        </div>
+                        <div class="ip password">
+                            <input type="password" name="password" id="password" required>
+                            <label for="password">New Password</label>
+                            <i class="fa-solid fa-eye-slash " style="color: #f02828;"></i>
+                        </div>
+                        <div class="ip password cf">
+                            <input type="password" name="confirm_password" id="password2" required>
+                            <label for="password">Confirm Password</label>
+                            <i class="fa-solid fa-eye-slash " style="color: #f02828;"></i>
+                        </div>
+                    
+                        <div class="log-in-btn c-btn">
+                            <button>Submit</button>
+                        </div>
+                    </form>
+                    
+                </div>
+                
+            </div> 
+            </div>
+        </div>
+        
+    </div>
+     
+    <script>
+        const ip=document.getElementById('password');
+        const icon=document.querySelector('.password i');
+
+        icon.addEventListener('click',(e)=>{
+            if(ip.value != ""){
+
+                if(e.target.classList.contains('fa-eye-slash')){
+                    e.target.classList.remove('fa-eye-slash');
+                    e.target.classList.add('fa-eye');
+                    ip.type='text';
+                }
+                else{
+                    e.target.classList.remove('fa-eye');
+                    e.target.classList.add('fa-eye-slash');
+                    ip.type='password';
+                }
+            }
+        })
+
+        const ip2=document.getElementById('password2');
+        const icon2=document.querySelector('.cf i');
+
+        icon2.addEventListener('click',(e)=>{
+            if(ip2.value != ""){
+
+                if(e.target.classList.contains('fa-eye-slash')){
+                    e.target.classList.remove('fa-eye-slash');
+                    e.target.classList.add('fa-eye');
+                    ip2.type='text';
+                }
+                else{
+                    e.target.classList.remove('fa-eye');
+                    e.target.classList.add('fa-eye-slash');
+                    ip2.type='password';
+                }
+            }
+        })
+        const fmsg=document.querySelector('.flash-messages');
+        
+        
+        setTimeout(()=>{
+            if(fmsg.classList.contains('active')){
+                fmsg.classList.remove('active');
+            }
+        },3000)
+        
+        const ims=document.querySelector('.inner');
+        if(ims.textContent != ""){
+            fmsg.classList.add('active');
+        }
+
+    </script>
+</body>
+</html>

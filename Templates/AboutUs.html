@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | Renova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" />
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <nav class="fixed top-0 w-full bg-white shadow px-6 py-4 flex justify-between items-center z-50">
+      <a href="{{ url_for('index') }}" class="text-3xl font-bold text-red-600">Renova</a>
+      <div class="hidden md:flex gap-8 text-lg">
+        <a href="{{ url_for('index') }}" class="hover:text-red-500">Home</a>
+        <a href="{{ url_for('about') }}" class="hover:text-red-500 font-semibold">About</a>
+        <a href="{{ url_for('contact') }}" class="hover:text-red-500">Contact</a>
+        {% if user is none %}
+        <a href="{{ url_for('login') }}" class="hover:text-red-500">Login</a>
+        {% else %}
+        <div class="relative group">
+          <img src="{{ src }}" class="w-10 h-10 rounded-full border cursor-pointer" />
+          <div class="absolute hidden group-hover:block right-0 mt-2 w-40 bg-white rounded-md shadow-md py-2">
+            <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+            <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </nav>
+
+    <main class="pt-32 px-6 max-w-5xl mx-auto space-y-12">
+      <section class="bg-white shadow-md rounded-xl p-8">
+        <h2 class="text-3xl font-bold text-red-600 mb-4">About Renova</h2>
+        <p class="text-lg text-gray-700">
+          Renova is a modern platform dedicated to bridging the gap between blood donors and recipients.
+          We prioritize verified donors, real-time coordination, and patient-focused service to ensure every unit of blood reaches where it is most needed.
+        </p>
+      </section>
+
+      <section class="bg-white shadow-md rounded-xl p-8">
+        <h2 class="text-3xl font-bold text-red-600 mb-4">What We Do</h2>
+        <p class="text-lg text-gray-700">
+          We connect willing donors with patients in need, ensure transparency in hospital collaborations, and offer features like donation tracking and e-certificates to encourage regular contributions.
+        </p>
+      </section>
+
+      <section class="bg-white shadow-md rounded-xl p-8">
+        <h2 class="text-3xl font-bold text-red-600 mb-4">Our Promise</h2>
+        <p class="text-lg text-gray-700">
+          Renova evolves with its users. Your feedback fuels our growth, and we’re committed to enhancing your experience with every update.
+        </p>
+      </section>
+
+      <section class="bg-white shadow-md rounded-xl p-8">
+        <h2 class="text-3xl font-bold text-red-600 mb-4">Stay Connected</h2>
+        <p class="text-lg text-gray-700">
+          Follow us on social media for updates and opportunities to make a life-saving impact. Whether you’re donating or requesting, Renova has your back.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
