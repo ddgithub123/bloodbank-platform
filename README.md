@@ -21,3 +21,22 @@ The **Blood Donation Web Application** is a full-stack system developed to simpl
 * **Feedback & Certificate Generation**
 
 
+### 📁 Project Structure:
+
+Renova/
+├── app/
+│   ├── static/                      # Static files (CSS, JS, images)
+│   ├── templates/                  # HTML templates for rendering views
+│   │   └── __init__.py             # Package initializer
+│   │   └── city.csv                # CSV data file (e.g., city details)
+│   │   └── models.py               # Database models and schema
+│   │   └── routes.py               # Application routes and logic
+│
+├── databases/
+│   └── bbms.db                     # SQLite database file
+│
+├── README.md                       # Project documentation
+├── requirements.txt                # Python dependencies
+├── app.py                          # Main application entry point
+
+
